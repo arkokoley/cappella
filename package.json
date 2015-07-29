@@ -1,0 +1,43 @@
+{
+  "name": "Cappella",
+  "version": "0.0.1",
+  "description": "A peer to peer streaming music player.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "clean" : "trash --force build",
+    "clean-mac": "trash --force build/mac release",
+    "clean-linux": "trash --force build/linux",
+    "clean-win": "trash --force build/win",
+    "build-mac": "npm run clean-mac && electron-packager . 'The Jackal of Javascript' --platform=darwin --arch=x64 --version=0.25.2 --icon ./resources/icon.icns --out ./build/mac --prune --ignore=node_modules/electron-prebuilt --ignore=node_modules/electron-packager --ignore=node_modules/trash --ignore=.git",
+    "build-linux": "npm run clean-linux && electron-packager . 'The Jackal of Javascript' --platform=linux --arch=x64 --version=0.25.2 --icon ./resources/icon.icns --out ./build/linux --prune --ignore=node_modules/electron-prebuilt --ignore=node_modules/electron-packager --ignore=node_modules/trash --ignore=.git",
+    "build-win": "npm run clean-win && electron-packager . 'The Jackal of Javascript' --platform=win32 --arch=ia32 --version=0.25.2 --out ./build/win --prune --ignore=node_modules/electron-prebuilt --ignore=node_modules/electron-packager --ignore=node_modules/trash --ignore=.git",
+    "build" : "npm run clean && npm run build-win && npm run build-linux && npm run build-mac",
+    "release-linux": "npm run clean-linux && npm run build-linux && mkdir release && cd release && grunt electron-debian-installer"
+  },
+  "keywords": [
+    "music",
+    "stream",
+    "p2p"
+  ],
+  "author": "Gaurav Koley",
+  "license": "MIT",
+  "dependencies": {
+    "angular": "^1.4.2",
+    "angular-route": "^1.4.2",
+    "chokidar": "^1.0.3",
+    "glob": "^5.0.13",
+    "jquery": "^2.1.4",
+    "knex": "^0.8.6",
+    "material-design-lite": "^1.0.0-3",
+    "musicmetadata": "^2.0.0",
+    "smokesignal": "^0.2.1",
+    "sqlite3": "^3.0.9"
+  },
+  "devDependencies": {
+    "electron-prebuilt": "^0.29.2",
+    "electron-rebuild": "^0.2.3",
+    "grunt": "^0.4.5",
+    "grunt-electron-debian-installer": "0.0.1"
+  }
+}

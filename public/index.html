@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html ng-app="cappella">
+  <head>
+  <style>
+    .demo-card-square {
+      /*height: 320px;*/
+    }
+    .demo-card-square > .mdl-card__title {
+      color: #fff;
+      background:
+        url('../assets/demos/dog.png') bottom right 15% no-repeat #46B6AC;
+    }
+
+  </style>
+    <title>Cappella</title>
+    <link rel="stylesheet" href="../node_modules/material-design-lite/material.min.css">
+    <script src="../node_modules/material-design-lite/material.min.js"></script>
+    <link rel="stylesheet" href="http://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="core.js"></script>
+  </head>
+<body>
+  <!-- No header, and the drawer stays open on larger screens (fixed drawer). -->
+  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer
+              mdl-layout--overlay-drawer-button">
+    <div class="mdl-layout__drawer">
+      <span class="mdl-layout-title">Cappella</span>
+      <nav class="mdl-navigation">
+        <a class="mdl-navigation__link" href="#artists">Artists</a>
+        <a class="mdl-navigation__link" href="#albums">Albums</a>
+        <a class="mdl-navigation__link" href="#songs">All Songs</a>
+        <a class="mdl-navigation__link" href="#settings">Settings</a>
+      </nav>
+      <div align="center" style="bottom:0px;position:absolute;width:100%">
+      <audio id="player" src=""></audio>
+      <p>
+      <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+        <i class="material-icons">skip_previous</i>
+      </button>
+      <button disabled="true" id="playBtn" onclick="playPauseMusic(this)" class="mdl-button mdl-js-button mdl-button--fab mdl-button--accent mdl-js-ripple-effect">
+        <i class="material-icons">play_arrow</i>
+      </button>
+      <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+        <i class="material-icons">skip_next</i>
+      </button>
+      </p>
+      <p style="width:100%">
+      <input class="mdl-slider mdl-js-slider" type="range" id="playerSeek" min="0" max="100" value="0" />
+      </p>
+      </div>
+    </div>
+    <main class="mdl-layout__content" ng-view>
+
+    </main>
+  </div>
+    <script>
+    var player = document.getElementById('player');
+    var seek = document.getElementById('playerSeek');
+    function playThis(element){
+      player.setAttribute('src',element.getAttribute('data'));
+      playPauseMusic(document.getElementById('playBtn'));
+    }
+    function playPauseMusic(element){
+      if(element.getAttribute('disabled') == 'true'){
+          element.disabled = false;
+      }
+      if(player.paused){
+        element.innerHTML = '<i class="material-icons">pause</i>';
+        player.play();
+      }else{
+        element.innerHTML = '<i class="material-icons">play_arrow</i>';
+        player.pause();
+      }
+    }
+    seek.addEventListener('change', function() {
+            player.currentTime = this.value;
+        });
+
+    player.addEventListener('timeupdate',function (){
+    seek.max =  player.duration;
+    seek.value = player.currentTime;
+
+    });
+    </script>
+    <script>
+    var Glob = require("glob");
+    var fs = require("fs");
+    var Meta = require("musicmetadata")
+    var db = require('./db.js');
+    function Input(e){
+      if(e.keyCode == 13){
+      var loc = document.getElementById("collection");
+      Glob(loc.value + "/**/*.mp3",function(err,files){
+        var keys = Object.keys(files);
+        var i = 0;
+        var songs = [];
+        console.log(files);
+        if (i < files.length)
+          doCall(files[i]);
+        else
+        {
+          db.putSongs(songs).then(function(res){
+            console.log(res);
+            window.location.hash = "#songs"
+          }).catch(console.error);
+        }
+        function doCall(file){
+          var parser = new Meta(fs.createReadStream(file), function (err,metadata) {
+            if(metadata){
+              metadata.location = file;
+              metadata.artist = JSON.stringify(metadata.artist);
+              metadata.albumartist = JSON.stringify(metadata.albumartist);
+              metadata.disk = JSON.stringify(metadata.disk);
+              metadata.track = JSON.stringify(metadata.track);
+              songs.push(metadata);
+            }
+            i++;
+            if(i < keys.length)
+              return doCall(files[i]);
+            else
+            {
+              db.putSongs(songs).then(function(res){
+                console.log(res);
+                window.location.hash = "#songs"
+              }).catch(console.error);
+            }
+          });
+        }
+      });
+      document.getElementById("spinner").className = 'mdl-spinner mdl-js-spinner is-active';
+      document.getElementById("spinner").setAttribute("style","left:40%;margin-top:20%;")
+      document.querySelector('.mdl-card__supporting-text').remove();
+      document.querySelector('.mdl-card__actions.mdl-card--border').remove();
+      }
+    }
+  </script>
+  </body>
+  </html>

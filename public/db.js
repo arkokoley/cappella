@@ -75,5 +75,8 @@ module.exports = {
         return knex.insert(song).into('songs');
       }).catch(console.log.bind(console));
     }));
+  },
+  checkDB: function () {
+    return knex.raw("SELECT 1 FROM songs LIMIT 1");
   }
 };

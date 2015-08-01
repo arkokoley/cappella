@@ -36,6 +36,10 @@ app.config(function($routeProvider) {
         templateUrl : 'pages/home.html',
         controller  : 'mainController'
     })
+    .when('/config', {
+        templateUrl : 'pages/home.html',
+        controller  : 'configController'
+    })
     // route for the artists page
     .when('/artists', {
         templateUrl : 'pages/artist.html',
@@ -48,12 +52,20 @@ app.config(function($routeProvider) {
     })
 });
 
-app.controller('songsController',function($scope,dbData) {
-  $scope.formData = {};
+app.controller('mainController',function($scope) {
+  db.getSongs().catch(function(){
+      db.migrate().then(function(res) {
+        window.location.hash = '#config';
+      });
+    }).then(function(res){
+      if(res == [])
+          window.location.hash = '#config';
+      else
+        window.location.hash = '#songs';
+  });
 });
 
 app.controller('songsController',function($scope,dbData) {
-  $scope.formData = {};
   dbData.getAllSongs()
     .then(function(data){
         //data = JSON.parse(data);
@@ -61,9 +73,10 @@ app.controller('songsController',function($scope,dbData) {
     });
 });
 app.controller('artistController',function($scope,dbData) {
-  $scope.formData = {};
   dbData.getAllArtists()
     .then(function(data){
         $scope.artists = data;
     });
+});
+app.controller('configController',function($scope,dbData) {
 });

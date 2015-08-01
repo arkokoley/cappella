@@ -1,6 +1,6 @@
 {
   "name": "Cappella",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A peer to peer streaming music player.",
   "main": "main.js",
   "scripts": {
@@ -9,9 +9,9 @@
     "clean-mac": "trash --force build/mac release",
     "clean-linux": "trash --force build/linux",
     "clean-win": "trash --force build/win",
-    "build-mac": "npm run clean-mac && electron-packager . 'The Jackal of Javascript' --platform=darwin --arch=x64 --version=0.25.2 --icon ./resources/icon.icns --out ./build/mac --prune --ignore=node_modules/electron-prebuilt --ignore=node_modules/electron-packager --ignore=node_modules/trash --ignore=.git",
-    "build-linux": "npm run clean-linux && electron-packager . 'The Jackal of Javascript' --platform=linux --arch=x64 --version=0.25.2 --icon ./resources/icon.icns --out ./build/linux --prune --ignore=node_modules/electron-prebuilt --ignore=node_modules/electron-packager --ignore=node_modules/trash --ignore=.git",
-    "build-win": "npm run clean-win && electron-packager . 'The Jackal of Javascript' --platform=win32 --arch=ia32 --version=0.25.2 --out ./build/win --prune --ignore=node_modules/electron-prebuilt --ignore=node_modules/electron-packager --ignore=node_modules/trash --ignore=.git",
+    "build-mac": "npm run clean-mac && electron-packager . 'Cappella' --asar --platform=darwin --arch=x64 --version=0.28.2 --icon ./resources/icon.icns --out ./build/mac --prune --ignore=build --ignore=release --ignore=node_modules/electron-prebuilt --ignore=node_modules/electron-packager --ignore=node_modules/trash --ignore=.git",
+    "build-linux": "npm run clean-linux && electron-packager . 'Cappella' --asar --platform=linux --arch=x64 --version=0.28.2 --icon ./resources/icon.icns --out ./build/linux --prune --ignore=build --ignore=release --ignore=node_modules/electron-prebuilt --ignore=node_modules/electron-packager --ignore=node_modules/trash --ignore=.git",
+    "build-win": "npm run clean-win && electron-packager . 'Cappella' --asar --platform=win32 --arch=x64 --version=0.28.2 --out ./build/win --prune --ignore=build --ignore=release --ignore=node_modules/electron-prebuilt --ignore=node_modules/electron-packager --ignore=node_modules/trash --ignore=.git",
     "build" : "npm run clean && npm run build-win && npm run build-linux && npm run build-mac",
     "release-linux": "npm run clean-linux && npm run build-linux && mkdir release && cd release && grunt electron-debian-installer"
   },

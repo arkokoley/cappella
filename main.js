@@ -27,17 +27,7 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600});
-
-  fs.exists("./cappella.db",function(exists){
-    if(!exists){
-      var db = require('./public/db.js');
-      db.migrate().then(function(){
-        mainWindow.loadUrl('file://' + __dirname + '/public/index.html');
-      }).catch(console.error);
-    }
-    else
-      mainWindow.loadUrl('file://' + __dirname + '/public/index.html');
-  });
+  mainWindow.loadUrl('file://' + __dirname + '/public/index.html');
   // and load the index.html of the app.
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {

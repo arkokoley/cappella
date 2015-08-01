@@ -23,8 +23,8 @@ module.exports = function(grunt) {
       options: {
         arch: 'amd64'
       },
-      src: 'build/Cappella-linux-x64',
-      dest: 'release/cappella_0.0.1_amd64.deb'
+      src: 'build/linux/Cappella-linux-x64',
+      dest: 'release/cappella_amd64.deb'
     },
 
   }
